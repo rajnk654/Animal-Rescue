@@ -48,7 +48,7 @@ public class RescuerController {
 	}
 
 	@GetMapping("/{id}")
-	public AnimalRescueResponse getRescuerById(Integer id) {
+	public AnimalRescueResponse getRescuerById(Long id) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {
@@ -65,7 +65,7 @@ public class RescuerController {
 	}
 
 	@PostMapping
-	public AnimalRescueResponse createRescuer(@RequestBody UserDto dto) {
+	public AnimalRescueResponse createRescuer(@RequestBody RescuerDto dto) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {
@@ -87,7 +87,7 @@ public class RescuerController {
 	}
 
 	@PutMapping("/{id}")
-	public AnimalRescueResponse updateRescuer(@PathVariable Integer id, @RequestBody UserDto rescuerDto) {
+	public AnimalRescueResponse updateRescuer(@PathVariable Long id, @RequestBody UserDto rescuerDto) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {
@@ -104,7 +104,7 @@ public class RescuerController {
 
 	// DELETE: Remove a rescuer by ID
 	@DeleteMapping("/{id}")
-	public AnimalRescueResponse deleteRescuer(@PathVariable(name = "id") Integer id) {
+	public AnimalRescueResponse deleteRescuer(@PathVariable (name = "id") Long id) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {

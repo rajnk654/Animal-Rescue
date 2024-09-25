@@ -3,25 +3,25 @@ package com.bvb.animalrescue.dto;
 import java.time.LocalDate;
 
 public class FeedbackDto {
-	private Integer id;
-	private Integer userId;
+	private Long id;
+	private Long userId;
 	private String feedbackDescription;
 	private Integer rating;
 	private LocalDate createdAt;
 
-	public Integer id() {
+	public Long id() {
 		return id;
 	}
 
-	public void setFeedbackId(Integer id) {
+	public void setFeedbackId(Long id) {
 		this.id = id;
 	}
 
-	public Integer getUserId() {
+	public Long getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
 

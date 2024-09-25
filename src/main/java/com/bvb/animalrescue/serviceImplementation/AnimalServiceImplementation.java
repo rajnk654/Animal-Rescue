@@ -12,11 +12,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.bvb.animalrescue.dao.AnimalRepository;
+import com.bvb.animalrescue.dao.FosterCareRepository;
 import com.bvb.animalrescue.dao.RescuerRepository;
+import com.bvb.animalrescue.dao.UserRepository;
 import com.bvb.animalrescue.dto.AnimalDto;
 import com.bvb.animalrescue.exception.AnimalRescueException;
 import com.bvb.animalrescue.model.Animal;
+import com.bvb.animalrescue.model.FosterCare;
 import com.bvb.animalrescue.model.Rescuer;
+import com.bvb.animalrescue.model.User;
 import com.bvb.animalrescue.service.AnimalService;
 import com.bvb.animalrescue.util.AnimalUtil;
 
@@ -31,41 +35,81 @@ public class AnimalServiceImplementation implements AnimalService {
 	@Autowired
 	private RescuerRepository rescuerRepository;
 
+	@Autowired
+	private FosterCareRepository fosterCareRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
 	private Logger logger = LoggerFactory.getLogger(AnimalServiceImplementation.class);
 
 	// POST: Create a new animal
-	public AnimalDto registerAnimal(AnimalDto animalDto, Integer rescuerId) throws AnimalRescueException {
+	@Override
+	public AnimalDto registerAnimal(AnimalDto animalDto, Long rescuerId, Integer fosterCareId)
+			throws AnimalRescueException {
 		Animal animal = AnimalUtil.convertAnimalsDtoToEntity(animalDto);
 		try {
 			Rescuer rescuer = rescuerRepository.findById(rescuerId).get();
-			animal.setRescueDate(LocalDate.now());
-			animal.setRescuer(rescuer);
-			animalRepository.save(animal);
-			return animalDto;
+			FosterCare fosterCare = fosterCareRepository.findById(fosterCareId).get();
+			if (rescuer == null) {
+				throw new AnimalRescueException("Rescuer  doesn't exist");
+
+			} else if (fosterCare == null) {
+				throw new AnimalRescueException(" FosterCare doesn't exist");
+			} else {
+				animal.setRescueDate(LocalDate.now());
+				animal.setRescuer(rescuer);
+				animal.setFosterCare(fosterCare);
+				animalRepository.save(animal);
+				return animalDto;
+			}
 
 		} catch (DataIntegrityViolationException exception) {
-			logger.warn("Animal Data Already Exists");
-			throw new AnimalRescueException("Animal Data Already Exists" + exception.getMessage());
+			logger.warn("Animal Data Already Exists"+exception.getLocalizedMessage());
+			throw new AnimalRescueException("Failed to add animal " + exception.getMessage());
 
 		}
 
+	}
+
+	public String adoptAnimal(Long adopterId, Integer animalId) throws AnimalRescueException {
+
+		Animal animal = animalRepository.findById(animalId)
+				.orElseThrow(() -> new AnimalRescueException("Animal not found with ID: " + animalId));
+
+		User adopter = userRepository.findById(adopterId)
+				.orElseThrow(() -> new AnimalRescueException("Adopter not found with ID: " + adopterId));
+
+		if (animal.getUser() != null) {
+			throw new AnimalRescueException("Animal is already adopted.");
+		}
+
+		animal.setUser(adopter);
+
+		animalRepository.save(animal);
+		return "Animal with ID: " + animalId + " successfully adopted by Adopter with ID: " + adopterId;
 	}
 
 	// GET: Retrieve all animals
 	public List<AnimalDto> getAllAnimals() throws AnimalRescueException {
 		try {
-			List<AnimalDto> listOfDtos = animalRepository.findAll().stream().map(AnimalUtil::convertAnimalsEntityToDto)
-					.collect(Collectors.toList());
+			List<AnimalDto> listOfDtos = animalRepository.findAll().stream()
+					.map(AnimalUtil::convertAnimalsEntityToDto).collect(Collectors.toList());
+
+			logger.info("Rescued Animals Data Fetched Successfully ");
 			return listOfDtos;
 		} catch (Exception exception) {
-			throw new AnimalRescueException(exception.getLocalizedMessage());
+			logger.error("Failed to fetch rescued animals: " + exception.getLocalizedMessage());
+			throw new AnimalRescueException("Failed to fetch rescued animals: " + exception.getLocalizedMessage());
 		}
 	}
 
 	// GET: Retrieve a specific animal by ID
-	public Animal getAnimalById(Integer id) throws AnimalRescueException {
+	public AnimalDto getAnimalById(Integer id) throws AnimalRescueException {
 		try {
-			return animalRepository.findById(id).orElse(null);
+			Animal animal = animalRepository.findById(id).orElse(null);
+			AnimalDto animalDto = AnimalUtil.convertAnimalsEntityToDto(animal);
+			return animalDto;
 		} catch (Exception exception) {
 			throw new AnimalRescueException(exception.getMessage());
 		}
@@ -108,4 +152,11 @@ public class AnimalServiceImplementation implements AnimalService {
 			throw new AnimalRescueException("Animal Data doesn't exist." + exception.getLocalizedMessage());
 		}
 	}
+
+	
+//	public AnimalDto registerAnimal(AnimalDto animalDto, Integer rescuerId, Integer fosterCareId)
+//			throws AnimalRescueException {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

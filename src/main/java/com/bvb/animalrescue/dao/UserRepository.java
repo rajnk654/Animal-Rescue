@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import com.bvb.animalrescue.model.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Long> {
 	/* @Query("SELECT u FROM Users u WHERE u.email=?1") */
 	Optional<User> findByEmail(String email);
+
+	Optional<User> findById(Integer userId);
 
 }

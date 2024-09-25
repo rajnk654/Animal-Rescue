@@ -1,18 +1,27 @@
 package com.bvb.animalrescue.dto;
 
 public class RescuerDto {
-	private Integer id;
+	private Long id;
 
 	private String location;
 	private String city;
 	private String state;
 	private Boolean availability;
+	private UserDto userDto;
+	
+	public UserDto getUserDto() {
+		return userDto;
+	}
 
-	public Integer getId() {
+	public void setUserDto(UserDto userDto) {
+		this.userDto = userDto;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

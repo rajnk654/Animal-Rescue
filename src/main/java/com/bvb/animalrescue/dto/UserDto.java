@@ -1,29 +1,54 @@
 package com.bvb.animalrescue.dto;
 
 public class UserDto {
-	private Integer id;
+	private Long id;
 	private String firstName;
 	private String lastName;
 	private String email;
 	private String phoneNumber;
-	private  RescuerDto rescuerDto;
-	
-	
+	private String profilePic;
+	private String rescuerDto;
+	private String password;
+	private Boolean isGoogleUser;
+	private Boolean enabled;
 
-	public RescuerDto getRescuerDto() {
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public Boolean getIsGoogleUser() {
+		return isGoogleUser;
+	}
+
+	public void setIsGoogleUser(Boolean isGoogleUser) {
+		this.isGoogleUser = isGoogleUser;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public String getRescuerDto() {
 		return rescuerDto;
 	}
 
-	public void setRescuerDto(RescuerDto rescuerDto) {
+	public void setRescuerDto(String rescuerDto) {
 		this.rescuerDto = rescuerDto;
 	}
 
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -58,5 +83,14 @@ public class UserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public String getProfilePic() {
+		return profilePic;
+	}
+
+	public void setProfilePic(String profilePic) {
+		this.profilePic = profilePic;
+	}
+	
 
 }

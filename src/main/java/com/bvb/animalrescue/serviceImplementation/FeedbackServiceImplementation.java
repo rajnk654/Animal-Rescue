@@ -34,7 +34,7 @@ public class FeedbackServiceImplementation implements FeedbackService {
 
 	private Logger logger = LoggerFactory.getLogger(FeedbackServiceImplementation.class);
 
-	public String createFeedback(Feedback feedback, Integer userId, Integer animalId) throws AnimalRescueException {
+	public String createFeedback(Feedback feedback, Long userId, Integer animalId) throws AnimalRescueException {
 		try {
 			User user = userRepository.findById(userId).orElse(null);
 			Animal animal = animalRepository.findById(animalId).orElse(null);
@@ -99,5 +99,11 @@ public class FeedbackServiceImplementation implements FeedbackService {
 			throw new AnimalRescueException("Feedback doesn't exist." + exception.getMessage());
 		}
 
+	}
+
+	@Override
+	public String createFeedback(Feedback feedback, Integer userId, Integer animalId) throws AnimalRescueException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

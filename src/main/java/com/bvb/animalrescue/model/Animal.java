@@ -23,8 +23,8 @@ public class Animal {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "animal_id")
-	private Integer id;
+	@Column(name = "id")
+	private Long id;
 
 	@Column(name = "animal_type")
 	private String animalType;
@@ -49,18 +49,37 @@ public class Animal {
 	@OneToMany(mappedBy = "animal")
 	private List<Feedback> feedback;
 	
-//	@ManyToOne
-//	@JoinColumn(name="foster_id",referencedColumnName = "id",nullable = false)
-//	private User user;
-//	
-//	
-//	public User getUser() {
-//		return user;
-//	}
-//
-//	public void setUser(User user) {
-//		this.user = user;
-//	}
+	@ManyToOne
+	@JoinColumn(name="fosterCare_id",referencedColumnName = "id",nullable = false)
+	private FosterCare fosterCare;
+	
+	@ManyToOne
+	@JoinColumn(name="adopter_id",referencedColumnName = "id",nullable = true)
+	private User user;
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public FosterCare getFosterCare() {
+		return fosterCare;
+	}
+
+	public void setFosterCare(FosterCare fosterCare) {
+		this.fosterCare = fosterCare;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 	public List<Feedback> getFeedback() {
 		return feedback;
@@ -68,14 +87,6 @@ public class Animal {
 
 	public void setFeedback(List<Feedback> feedback) {
 		this.feedback = feedback;
-	}
-
-	public Integer getid() {
-		return id;
-	}
-
-	public void setid(Integer id) {
-		this.id = id;
 	}
 
 	public String getAnimalType() {

@@ -28,13 +28,14 @@ public class AnimalController {
 	@Autowired
 	private AnimalServiceImplementation animalService;
 
-	@PostMapping("/{rescuerId}")
-	public AnimalRescueResponse registerAnimal(@RequestBody AnimalDto dto,
-			@PathVariable(name = "rescuerId") Integer rescuerId) {
+	@PostMapping("rescuer-Id/{rescuerId}/fosterCare-Id/{fosterCareId}")
+	public AnimalRescueResponse registerAnimal(@PathVariable(name = "rescuerId") Long rescuerId,
+			@PathVariable(name = "fosterCareId") Integer fosterCareId, @RequestBody AnimalDto dto) {
+
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {
-			AnimalDto animalDto = animalService.registerAnimal(dto, rescuerId);
+			AnimalDto animalDto = animalService.registerAnimal(dto, rescuerId, fosterCareId);
 			if (animalDto != null) {
 				status = HttpStatus.OK;
 				return new AnimalRescueResponse(animalDto, status);
@@ -46,6 +47,25 @@ public class AnimalController {
 
 		} catch (Exception exception) {
 			message = "Internal Server Error !!" + exception.getLocalizedMessage();
+		}
+		return new AnimalRescueResponse(message, status);
+	}
+
+	//
+	@PostMapping("/animalId/{animalId}/adopterId/{adopterId}")
+	public AnimalRescueResponse adoptAnimal(@PathVariable(name = "adopterId")Long adopterId,
+			@PathVariable(name = "animalId")Integer animalId) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		String message = "";
+		try {
+			// Assuming addAnimal returns a success message.
+			message = animalService.adoptAnimal(adopterId, animalId);
+			status = HttpStatus.OK;
+		} catch (AnimalRescueException exception) {
+			message = "Failed To Add Animal!! " + exception.getMessage();
+		} catch (Exception exception) {
+			message = "Internal Server Error: " + exception.getMessage();
+			status = HttpStatus.INTERNAL_SERVER_ERROR; // Update status on a general exception
 		}
 		return new AnimalRescueResponse(message, status);
 	}
@@ -72,7 +92,7 @@ public class AnimalController {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String message = "";
 		try {
-			Animal animal = animalService.getAnimalById(id);
+			AnimalDto animal = animalService.getAnimalById(id);
 			status = HttpStatus.OK;
 			if (animal == null) {
 				throw new AnimalRescueException("Empty Animal Data");
